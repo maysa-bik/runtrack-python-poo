@@ -12,5 +12,6 @@ Operation_instance = Operation(12, 3)
 print(Operation_instance)
 print("Le nombre1 est  :", Operation_instance.nombre1)
 print("Le nombre2 est  :", Operation_instance.nombre2)    
-print(Operation_instance.addition)
+Operation_instance.addition()
+
 

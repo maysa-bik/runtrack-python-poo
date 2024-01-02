@@ -4,4 +4,11 @@ class Personne:
         self.prenom = prenom
 
     def SePresenter(self):
-        return  f"Je m'appelle {self.nom} {self.prenom}"    
+        return  f" Je suis {self.nom} {self.prenom}"    
+    
+personne1 = Personne("John", "Doe")
+
+personne2 = Personne("Jean", "Dupond")
+
+print(personne1.SePresenter())
+print(personne2.SePresenter())
