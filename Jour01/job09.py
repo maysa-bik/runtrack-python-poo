@@ -5,6 +5,7 @@ class Produit:
         self.TVA = TVA
 
     def CalculerPrixTTC(self):
+        print(self.prixHT * (1 + self.TVA / 100))
         return self.prixHT * (1 + self.TVA / 100)
     def afficher(self):
         return f"Nom du produit :{self.nom},PRIX HT: {self.prixHT},TVA : {self.TVA}%"

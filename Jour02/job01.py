@@ -1,19 +1,19 @@
 class Rectangle:
     def __init__(self, longueur, largeur):
-        self.longueur = longueur
-        self.largeur = largeur
+        self.__longueur = longueur
+        self.__largeur = largeur
 
     def get_longueur(self):
-        return self.longueur
+        return self.__longueur
 
     def set_longueur(self, longueur):
-        self.longueur = longueur 
+        self.__longueur = longueur 
 
     def get_largeur(self):
-        return self.largeur
+        return self.__largeur
 
     def set_largeur(self, largeur):
-        self.largeur = largeur
+        self.__largeur = largeur
 
 mon_rectangle = Rectangle(10, 5)
 print(mon_rectangle.get_longueur())
