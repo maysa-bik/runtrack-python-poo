@@ -49,18 +49,3 @@ print(f"TVA à payer : {tva_commande} €")
 commande1.annuler_commande()
 commande1.afficher_commande()
 
-
-
-
-
-"""
-class ville 
-
-
-class personne
- def ini
-marseille = ville("paris", "100000")
-pirre = personne("pierre",marseille)
-pierre.ville
-
-"""
