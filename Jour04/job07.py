@@ -1,75 +1,86 @@
-class Carte:
-    def __init__(self, valeur, couleur, type):
-        self.__valeur = valeur
-        self.__couleur = couleur
-        self.__type = type
-    def __str__(self):
-        return f"{self.__valeur} de {self.__couleur} de {self.__type}"
-    def get_valeur(self):
-        return self.__valeur
 import random
 
+class Carte:
+    def __init__(self, valeur, couleur):
+        self.valeur = valeur
+        self.couleur = couleur
+
+    def __str__(self):
+        return f"{self.couleur} {self.valeur}"
+
 class Jeu:
     def __init__(self):
-        self.cartes = []
-        self.couleur = ["Cœur", "Carreau", "Trèfle", "Pique"]
-        self.valeurs = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "Valet", "Dame", "Roi", "As"]
+        self.paquet = []
+        self.construire_paquet()
+        self.joueur = []
+        self.croupier = []
 
-        # Initialisez le jeu avec toutes les cartes possibles
-        self.initialiser_cartes()
+    def construire_paquet(self):
+        for couleur in ["Cœurs", "Piques", "Trèfles", "Carreaux"]:
+            for valeur in range(1, 14):
+                self.paquet.append(Carte(valeur, couleur))
 
-    def initialiser_cartes(self):
-        self.cartes = [Carte(valeur, couleur, "Normal") for valeur in self.valeurs for couleur in self.couleur]
+    def melanger_paquet(self):
+        random.shuffle(self.paquet)
 
-    def get_couleur(self):
-        return self.couleur
-    
-        
-    def melanger_cartes(self):
-        random.shuffle(self.cartes)
-        #La fonction shuffle garantit un mélange aléatoire des cartes, rendant le jeu plus imprévisible et plus équitable pour tous les joueurs.
-    
-    def distribuer_cartes(self, nombre):
-        return [self.cartes.pop() for _ in range(nombre)]
-    #La méthode distribuer_cartes permet de donner un nombre spécifié de cartes au joueur (ou au croupier). Elle utilise la méthode pop pour retirer ces cartes de l'ensemble de cartes du jeu.
+    def distribuer_cartes(self):
+        for _ in range(2):
+            self.joueur.append(self.paquet.pop())
+            self.croupier.append(self.paquet.pop())
 
-    def calculer_total_points(self, main):
-        total = 0
-        as_present = False
-
+    def calculer_points(self, main):
+        points = 0
+        as_count = 0
         for carte in main:
-            if carte.get_valeur.isdigit():
-                total += int(carte.get_valeur)
-            elif carte.valeur in ["J", "Q", "K"]:
-                total += 10
-            elif carte.get_valeur == "A":
-                total += 11
-                as_present = True
+            points += carte.valeur
+            if carte.valeur == 1:
+                as_count += 1
+        while points < 12 and as_count > 0:
+            points += 10
+            as_count -= 1
+        return points
 
-        while total > 21 and as_present:
-            total -= 10
-            as_present = False
+    def afficher_cartes(self, main):
+        for carte in main:
+            print(carte, end=' ')
+        print(f"Points : {self.calculer_points(main)}")
 
-        return total
-# Exemple d'utilisation
-jeu_blackjack = Jeu()
-main_joueur = jeu_blackjack.distribuer_cartes(2)
-total_joueur = jeu_blackjack.calculer_total_points(main_joueur)
+    def continuer_jouer(self):
+        return input("Voulez-vous prendre une autre carte ? (o/n) ").lower() == "o"
 
-print(f"Main du joueur : {[str(carte) for carte in main_joueur]}, Total : {total_joueur}")
+    def jouer(self):
+        self.melanger_paquet()
+        self.distribuer_cartes()
+        print("Carte du joueur :", end=' ')
+        self.afficher_cartes(self.joueur)
 
-"""
-class Jeu:
-    def __init__(self):
-        self.cartes = self.initialiser_cartes()
-        self.melanger_cartes()
+        while self.calculer_points(self.joueur) < 21 and self.continuer_jouer():
+            self.joueur.append(self.paquet.pop())
+            print("Carte du joueur :", end=' ')
+            self.afficher_cartes(self.joueur)
 
-    def initialiser_cartes(self):
-        valeurs = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A"]  
-        types = ["Pique", "Cœur", "Carreau", "Trèfle"]
-        return [Carte(valeur, type) for valeur in valeurs for type in types]
-    
-    def melanger_cartes(self):
-        random.shuffle(self.cartes)
-        #La fonction shuffle garantit un mélange aléatoire des cartes, rendant le jeu plus imprévisible et plus équitable pour tous les joueurs.
-"""    
+        print("\nCarte du croupier :", end=' ')
+        self.afficher_cartes(self.croupier)
+
+        while self.calculer_points(self.croupier) < 17:
+            self.croupier.append(self.paquet.pop())
+            print("\nCarte du croupier :", end=' ')
+            self.afficher_cartes(self.croupier)
+
+        points_joueur = self.calculer_points(self.joueur)
+        points_croupier = self.calculer_points(self.croupier)
+
+        if points_joueur > 21:
+            print("\nLe joueur a perdu.")
+        elif points_croupier > 21:
+            print("\nLe croupier a perdu.")
+        elif points_joueur > points_croupier:
+            print("\nLe joueur a gagné.")
+        elif points_joueur == points_croupier:
+            print("\nÉgalité.")
+        else:
+            print("\nLe croupier a gagné.")
+
+if __name__ == "__main__":
+    jeu = Jeu()
+    jeu.jouer()
